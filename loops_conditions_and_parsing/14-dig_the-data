@@ -1,2 +1,3 @@
 log_dir="$(cd "$(dirname "$0")" && pwd)"
-awk '{count[$1" "$9]++} END {for (k in count) printf "%9d %s\n", count[k], k}' "$log_dir/apache-access.log" | sort -nr
+awk '{count[$1" "$9]++} END {for (k in count) printf "%d %s\n", count[k], k}' apache-access.log | sort -nr
+

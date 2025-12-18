@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # Group visitors by IP and HTTP status code
-awk '$1 ~ /^[0-9.]+$/ && $9 ~ /^[0-9]{3}$/ { count[$1" "$9]++ }
-END { for (k in count) printf "%7d %s\n", count[k], k }' apache-access.log | sort -nr
+awk '$1 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ && $9 ~ /^[0-9][0-9][0-9]$/ { c[$1" "$9]++ }
+END { for (k in c) printf "%7d %s\n", c[k], k }' apache-access.log | sort -nr

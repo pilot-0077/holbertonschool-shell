@@ -1,3 +1,3 @@
-# Processes and Signals
+# Processes and signals
 
-This directory contains Bash scripts related to processes and signals.
+Holberton School - Bash scripts for processes & signals.

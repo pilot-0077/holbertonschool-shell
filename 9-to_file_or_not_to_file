@@ -1,18 +1,4 @@
 #!/usr/bin/env bash
-# Creates /var/run/myscript.pid, prints indefinitely, and cleans up on signals
-
-echo "$$" > /var/run/myscript.pid
-
-sigterm() { echo "I hate the kill command"; rm -f /var/run/myscript.pid; exit; }
-sigint()  { echo "Y U no love me?!"; }
-sigquit() { rm -f /var/run/myscript.pid; exit; }
-
-trap sigterm SIGTERM
-trap sigint SIGINT
-trap sigquit SIGQUIT
-
-while true; do
-  echo "To infinity and beyond"
-  sleep 2
-done
+# Kills the 7-highlander process
+pkill -SIGKILL 7-highlander
 

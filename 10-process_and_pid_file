@@ -8,10 +8,10 @@ cleanup() {
   exit 0
 }
 
-# Ensure directory exists in the checker/jail environment
-mkdir -p "$(dirname "$PID_FILE")"
+# Make sure /var/run exists (some sandboxes/jails may not have it as expected)
+mkdir -p /var/run
 
-# Write PID immediately
+# Create PID file immediately
 printf "%d\n" "$$" > "$PID_FILE"
 
 trap 'echo "I hate the kill command"; cleanup' SIGTERM

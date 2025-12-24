@@ -13,16 +13,17 @@ sigint() {
   echo "Y U no love me?!"
 }
 
-sigquit() {
+cleanup_quit() {
   rm -f /var/run/myscript.pid
   exit 0
 }
 
 trap sigterm SIGTERM
-trap sigint  SIGINT
-trap sigquit SIGQUIT
+trap sigint SIGINT
+trap cleanup_quit SIGQUIT
 
-while true; do
+while true
+do
   echo "To infinity and beyond"
   sleep 2
 done

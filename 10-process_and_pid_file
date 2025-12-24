@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
-# Creates a PID file, prints a message indefinitely, and handles signals
+# Creates /var/run/myscript.pid, prints forever, and handles signals.
 
 PID_FILE="/var/run/myscript.pid"
 
-echo $$ > "$PID_FILE"
-
 cleanup() {
-    rm -f "$PID_FILE"
-    exit 0
+  rm -f "$PID_FILE"
+  exit 0
 }
+
+# Ensure directory exists in the checker/jail environment
+mkdir -p "$(dirname "$PID_FILE")"
+
+# Write PID immediately
+printf "%d\n" "$$" > "$PID_FILE"
 
 trap 'echo "I hate the kill command"; cleanup' SIGTERM
 trap 'echo "Y U no love me?!"' SIGINT
 trap 'cleanup' SIGQUIT
 
-while true
-do
-    echo "To infinity and beyond"
-    sleep 2
+while true; do
+  echo "To infinity and beyond"
+  sleep 2
 done

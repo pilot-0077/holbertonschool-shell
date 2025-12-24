@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Creates /var/run/myscript.pid containing its PID
-# Prints "To infinity and beyond" indefinitely (sleep 2)
-# SIGTERM: prints "I hate the kill command"
-# SIGINT : prints "Y U no love me?!"
-# SIGQUIT or SIGTERM: deletes PID file and exits
+# Prints "To infinity and beyond" indefinitely
+# SIGTERM -> prints message, deletes pid file, exits
+# SIGINT  -> prints message only
+# SIGQUIT -> deletes pid file, exits
 
 PID_FILE="/var/run/myscript.pid"
 
@@ -12,14 +12,17 @@ cleanup() {
   exit 0
 }
 
+# IMPORTANT: checker runs script in background subshell
+# Without this, process dies before pid file is created
+trap '' HUP
+
 echo $$ > "$PID_FILE"
 
-trap 'echo "I hate the kill command"; cleanup' SIGTERM
-trap 'echo "Y U no love me?!"' SIGINT
-trap 'cleanup' SIGQUIT
+trap 'echo "I hate the kill command"; cleanup' TERM
+trap 'echo "Y U no love me?!"' INT
+trap 'cleanup' QUIT
 
-while true
-do
+while true; do
   echo "To infinity and beyond"
   sleep 2
 done

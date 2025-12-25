@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 # Creates /var/run/myscript.pid containing its PID
-# Prints "To infinity and beyond" indefinitely (sleep 2)
-# SIGTERM: prints "I hate the kill command", removes PID file and exits
-# SIGINT : prints "Y U no love me?!", removes PID file and exits
-# SIGQUIT: removes PID file and exits
 
 PID_FILE="/var/run/myscript.pid"
 
@@ -12,11 +8,17 @@ cleanup() {
   exit 0
 }
 
-trap 'echo "I hate the kill command"; cleanup' SIGTERM
-trap 'echo "Y U no love me?!"; cleanup' SIGINT
-trap 'cleanup' SIGQUIT
+# Write PID to file
+echo "$$" > "$PID_FILE"
 
-echo $$ > "$PID_FILE"
+# SIGTERM: message + remove PID file + exit
+trap 'echo "I hate the kill command"; cleanup' SIGTERM
+
+# SIGINT: only message, do not remove PID file in this task
+trap 'echo "Y U no love me?!"; exit 0' SIGINT
+
+# SIGQUIT: remove PID file and exit
+trap 'cleanup' SIGQUIT
 
 while true; do
   echo "To infinity and beyond"

@@ -17,7 +17,7 @@ trap 'echo "Y U no love me?!"; cleanup' SIGINT
 trap 'cleanup' SIGQUIT
 
 # PID faylını yarat
-echo "$$" > "$PID_FILE"
+echo $$ > "$PID_FILE"
 
 while true; do
   echo "To infinity and beyond"

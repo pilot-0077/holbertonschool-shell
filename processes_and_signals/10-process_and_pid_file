@@ -16,7 +16,6 @@ trap 'echo "I hate the kill command"; cleanup' SIGTERM
 trap 'echo "Y U no love me?!"; cleanup' SIGINT
 trap 'cleanup' SIGQUIT
 
-# PID faylını yarat
 echo $$ > "$PID_FILE"
 
 while true; do

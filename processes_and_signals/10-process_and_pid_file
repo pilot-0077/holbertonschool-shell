@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
-# Script that creates /var/run/myscript.pid with its PID and handles signals
+# Creates /var/run/myscript.pid containing its PID
+# Prints "To infinity and beyond" indefinitely (sleep 2)
+# SIGTERM: prints "I hate the kill command", removes PID file and exits
+# SIGINT : prints "Y U no love me?!", removes PID file and exits
+# SIGQUIT: removes PID file and exits
 
 PID_FILE="/var/run/myscript.pid"
 
-# Write current PID to the file
-echo "$$" > "$PID_FILE"
+cleanup() {
+  rm -f "$PID_FILE"
+  exit 0
+}
 
-# SIGTERM (kill): print message, remove file, exit
-trap 'echo "I hate the kill command"; rm -f "$PID_FILE"; exit' SIGTERM
+# PID faylını yarat (səhvləri ignore et)
+echo "$$" > "$PID_FILE" 2>/dev/null
 
-# SIGINT (Ctrl+C): print message
-trap 'echo "Y U no love me?!";' SIGINT
+trap 'echo "I hate the kill command"; cleanup' SIGTERM
+trap 'echo "Y U no love me?!"; cleanup' SIGINT
+trap 'cleanup' SIGQUIT
 
-# SIGQUIT: remove file and exit
-trap 'rm -f "$PID_FILE"; exit' SIGQUIT
-
-# Infinite loop
 while true; do
-    echo "To infinity and beyond"
-    sleep 2
+  echo "To infinity and beyond"
+  sleep 2
 done

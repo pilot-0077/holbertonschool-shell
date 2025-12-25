@@ -1,44 +1,19 @@
 #!/usr/bin/env bash
-# Creates /var/run/myscript.pid containing its PID
-# Prints "To infinity and beyond" indefinitely (sleep 2)
-# SIGTERM: prints "I hate the kill command", removes PID file and exits
-# SIGINT : prints "Y U no love me?!"
-# SIGQUIT: removes PID file and exits
-# SIGQUIT və SIGTERM: PID faylını silib çıxmalıdır
 
 PID_FILE="/var/run/myscript.pid"
 
-# /var/run yoxdursa, yarat (icazə varsa)
-if [ ! -d "/var/run" ]; then
-    mkdir -p /var/run || exit 1
-fi
-
-# Öz PID-ni fayla yaz
-echo "$$" > "$PID_FILE" || exit 1
-
-# SIGTERM handler
-on_sigterm() {
-    echo "I hate the kill command"
-    rm -f "$PID_FILE"
-    exit 0
+cleanup() {
+  rm -f "$PID_FILE"
+  exit 0
 }
 
-# SIGINT handler – YALNIZ mesaj, çıxmır, faylı silmir
-on_sigint() {
-    echo "Y U no love me?!"
-}
+echo "$$" > "$PID_FILE"
 
-# SIGQUIT handler – səssizcə təmizlə və çıx
-on_sigquit() {
-    rm -f "$PID_FILE"
-    exit 0
-}
-
-trap 'on_sigterm' SIGTERM
-trap 'on_sigint' SIGINT
-trap 'on_sigquit' SIGQUIT
+trap 'echo "I hate the kill command"; cleanup' SIGTERM
+trap 'echo "Y U no love me?!"; exit 0' SIGINT
+trap 'cleanup' SIGQUIT
 
 while true; do
-    echo "To infinity and beyond"
-    sleep 2
+  echo "To infinity and beyond"
+  sleep 2
 done
